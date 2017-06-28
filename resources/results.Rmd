@@ -1,0 +1,39 @@
+---
+output: pdf_document
+---
+
+Twitter data pulled for the #rstats tweet on `r Sys.Date()` is stored in the downloaded file data.csv and can be read with:
+
+```{r echo=TRUE, eval=FALSE}
+library(ggplot2)
+twdata <- read.csv("data.csv")
+create_plot <- function(d){
+  p <-
+      ggplot(data = top_15, aes(x = reorder(token, count), y = count)) + geom_bar(stat ="identity", fill="grey") +
+      coord_flip() +
+      xlab("") + 
+      ylab("")  +
+      theme_bw()+
+      scale_y_continuous(expand = c(0,0)) +
+      theme(axis.line = element_line(colour = "black"),
+            panel.grid.major = element_line(colour='lightgrey'),
+            panel.grid.minor = element_blank(),
+            panel.border = element_blank(),
+            panel.background = element_blank(),
+            axis.text = element_text(size=12, colour = "steelblue")) 
+}
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+create_plot(twdata %>% head(n=18) %>% .[-c(1:3),])
+```
+
+```{r echo=FALSE, include=FALSE}
+# If you were to render on the fly (having the download handler call rmarkdown::render), then you
+# wouldn't need to copy the data or duplicate the create_plot function. This is because the call 
+# to render would occur in the same environment as the shiny application. So you could directly access
+# the reactive values and the functions defined in the shiny app. i.e. this template could just include:
+# create_plot(twdata_s())
+```
+

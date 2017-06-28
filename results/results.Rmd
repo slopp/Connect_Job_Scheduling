@@ -1,0 +1,28 @@
+---
+output: pdf_document
+---
+
+Twitter data pulled for the #rstats tweet on `r Sys.Date()` is stored in the downloaded file data.csv.
+
+```{r echo=TRUE, eval=TRUE}
+library(ggplot2)
+library(magrittr)
+twdata <- read.csv(file("data.csv",encoding = "UTF-8"))
+twdata$token <- twdata$token %>% iconv(from="UTF-8", to="US-ASCII")
+create_plot <- function(top_15){
+  p <-
+      ggplot(data = top_15, aes(x = reorder(token, count), y = count)) + geom_bar(stat ="identity") +
+      coord_flip() +
+      xlab("") + 
+      ylab("")  +
+      scale_y_continuous(expand = c(0,0))  
+  p
+}
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+create_plot(twdata %>% head(n=18) %>% .[-c(1:3),])
+```
+
+
